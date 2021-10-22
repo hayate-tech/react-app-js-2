@@ -6,7 +6,7 @@ import pipe from "lodash/fp/pipe";
 
 import * as qs from "qs";
 import { cleanObject, isTrue, useDebounce } from "../../screens/utils";
-import LocaleButton from "../LocaleButton";
+import LocaleButtonWithHooks from "../LocaleButton/LocaleButtonWithHooks";
 
 import styled from "styled-components";
 
@@ -19,10 +19,19 @@ const StyledProjectList = styled.div`
   align-items: center;
 `;
 
+// Keeps track of all created functions during the app's life
+const functions = new Set();
+
 export const ProjectSearchList = () => {
-  const [param, setParam] = useState({ project_name: "", manager_id: "" }); // param.manager_id param.project_name
+  // const [param, setParam] = useState({ project_name: "", manager_id: "" }); // param.manager_id param.project_name
+  const [projectName, setProjectName] = useState("");
+  const [managerId, setManagerId] = useState("");
   const [managers, setManagers] = useState([]);
   const [list, setList] = useState([]);
+  const param = React.useMemo(
+    () => ({ project_name: projectName, manager_id: managerId }),
+    [projectName, managerId]
+  );
 
   useEffect(() => {
     fetch(`${apiURL}/managers`).then(async (response) => {
@@ -32,7 +41,7 @@ export const ProjectSearchList = () => {
     });
   }, []);
 
-  const changeParamProjectName = (object) => {
+  const changeParamProjectName = React.useCallback((object) => {
     const result = { ...object };
     const value = result["project_name"];
     if (isTrue(value)) {
@@ -40,7 +49,10 @@ export const ProjectSearchList = () => {
       delete result["project_name"];
     }
     return result;
-  };
+  }, []);
+
+  // Register the functions so we can count them
+  functions.add(changeParamProjectName);
 
   const debouncedParam = useDebounce(param, 300);
 
@@ -57,17 +69,24 @@ export const ProjectSearchList = () => {
         }
       }
     );
-  }, [debouncedParam]);
+  }, [debouncedParam, changeParamProjectName]);
 
   return (
     <StyledProjectList>
-      {/* <LocaleButton /> */}
-      <SearchPanel param={param} setParam={setParam} managers={managers} />
+      <LocaleButtonWithHooks />
+      <div>{`total created changeParamProjectName: ${functions.size}`}</div>
+      {/* <SearchPanel param={param} setParam={setParam} managers={managers} /> */}
+      <SearchPanel
+        projectName={projectName}
+        setProjectName={setProjectName}
+        managerId={managerId}
+        setManagerId={setManagerId}
+        managers={managers}
+      />
       <List list={list} managers={managers} />
     </StyledProjectList>
   );
 };
-
 // {
 /* <ProjectSearchList>
 <styled.div>

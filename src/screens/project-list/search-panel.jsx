@@ -33,25 +33,25 @@ const { Option } = Select;
 //   );
 // });
 
-export const SearchPanel = ({ param, setParam, managers }) => (
+export const SearchPanel = ({
+  projectName,
+  setProjectName,
+  managerId,
+  setManagerId,
+  managers,
+}) => (
   <form>
     <Input
       type="text"
-      value={param.project_name}
+      value={projectName}
       onChange={(evt) => {
-        setParam({
-          ...param,
-          project_name: evt.target.value,
-        });
+        setProjectName(evt.target.value);
       }}
     />
     <Select
-      defaultValue={param.manager_id}
+      defaultValue={managerId}
       onChange={(value) => {
-        setParam({
-          ...param,
-          manager_id: value,
-        });
+        setManagerId(value);
       }}
     >
       <Option value="">Manager</Option>
