@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, Select } from "antd";
 import { SearchPanel } from "../../../screens/project-list/search-panel";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 
 describe("../../screens/project-list/list", () => {
   const makeProps = (override) => ({
@@ -11,42 +11,42 @@ describe("../../screens/project-list/list", () => {
       { id: 3, name: "Vincent" },
       { id: 4, name: "Alex" },
     ],
-    param: {
-      manager_id: "",
-      project_name: "",
-    },
-    setParam: () => {},
+    managerId: "",
+    projectName: "",
+    setManagerId: () => {},
+    setProjectName: () => {},
     ...override,
   });
 
   it("should trigger onChange", () => {
-    const setParamSpy = jest.fn();
+    const setProjectNameSpy = jest.fn();
+    const setManagerIdSpy = jest.fn();
 
-    const props = makeProps({ setParam: setParamSpy });
+    const props = makeProps({
+      setProjectName: setProjectNameSpy,
+      setManagerId: setManagerIdSpy,
+    });
     const wrapper = shallow(<SearchPanel {...props} />);
     wrapper
       .find(Input)
       .props()
       .onChange({ target: { value: "123" } });
 
-    expect(setParamSpy).toHaveBeenCalledTimes(1);
-    expect(setParamSpy).toHaveBeenCalledWith({
-      manager_id: "",
-      project_name: "123",
-    });
+    expect(setProjectNameSpy).toHaveBeenCalledTimes(1);
+    expect(setProjectNameSpy).toHaveBeenCalledWith("123");
+    expect(setManagerIdSpy).not.toHaveBeenCalled();
   });
 
-  it("should trigger Select onChange", () => {
-    const setParamSpy = jest.fn();
+  it("should trigger SearchSelect onChange", () => {
+    const setManagerIdSpy = jest.fn();
 
-    const props = makeProps({ setParam: setParamSpy });
+    const props = makeProps({ setManagerId: setManagerIdSpy });
     const wrapper = shallow(<SearchPanel {...props} />);
-    wrapper.find(Select).props().onChange("123");
+    console.log(wrapper.find("Memo()").dive().debug());
 
-    expect(setParamSpy).toHaveBeenCalledTimes(1);
-    expect(setParamSpy).toHaveBeenCalledWith({
-      manager_id: "123",
-      project_name: "",
-    });
+    wrapper.find("Memo()").dive().find(Select).props().onChange("123");
+
+    expect(setManagerIdSpy).toHaveBeenCalledTimes(1);
+    expect(setManagerIdSpy).toHaveBeenCalledWith("123");
   });
 });

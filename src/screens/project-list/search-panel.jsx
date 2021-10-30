@@ -5,33 +5,27 @@ import { Input, Select } from "antd";
 
 const { Option } = Select;
 
-// const SearchSelect = React.memo(() => {
-//   const param = { manager_id: "" };
-//   const setParam = _.noop;
-//   const managers = [];
-
-//   return (
-//     <>
-//       <div>Hello Select</div>
-//       <Select
-//         defaultValue={param.manager_id}
-//         onChange={(value) => {
-//           setParam({
-//             ...param,
-//             manager_id: value,
-//           });
-//         }}
-//       >
-//         <Option value="">Manager</Option>
-//         {managers.map((manager) => (
-//           <Option value={manager.id} key={manager.id}>
-//             {manager.name}
-//           </Option>
-//         ))}
-//       </Select>
-//     </>
-//   );
-// });
+export const SearchSelect = React.memo(
+  ({ managerId, setManagerId, managers }) => {
+    return (
+      <>
+        <Select
+          defaultValue={managerId}
+          onChange={(value) => {
+            setManagerId(value);
+          }}
+        >
+          <Option value="">Manager</Option>
+          {managers.map((manager) => (
+            <Option value={manager.id} key={manager.id}>
+              {manager.name}
+            </Option>
+          ))}
+        </Select>
+      </>
+    );
+  }
+);
 
 export const SearchPanel = ({
   projectName,
@@ -48,18 +42,10 @@ export const SearchPanel = ({
         setProjectName(evt.target.value);
       }}
     />
-    <Select
-      defaultValue={managerId}
-      onChange={(value) => {
-        setManagerId(value);
-      }}
-    >
-      <Option value="">Manager</Option>
-      {managers.map((manager) => (
-        <Option value={manager.id} key={manager.id}>
-          {manager.name}
-        </Option>
-      ))}
-    </Select>
+    <SearchSelect
+      managerId={managerId}
+      setManagerId={setManagerId}
+      managers={managers}
+    />
   </form>
 );
