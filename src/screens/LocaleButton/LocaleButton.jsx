@@ -17,7 +17,9 @@ export default class LocaleButton extends React.Component {
 
   render() {
     return (
-      <Button onClick={() => this.toggleLocale()}>{this.state.locale}</Button>
+      <Button onClick={() => this.toggleLocale()} data-testid="locale-button">
+        {this.state.locale}
+      </Button>
     );
   }
 }

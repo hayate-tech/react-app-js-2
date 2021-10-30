@@ -6,6 +6,10 @@ import { mount, shallow } from "enzyme";
 describe("../../screens/LocaleButton/LocaleButton", () => {
   it("should render LocaleButton by default", () => {
     const localeButton = shallow(<LocaleButton />);
+    console.log(localeButton.debug());
+
+    const localeButton2 = mount(<LocaleButton />);
+    console.log(localeButton2.debug());
 
     expect(localeButton.find(Button)).toHaveLength(1);
   });
